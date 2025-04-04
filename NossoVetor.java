@@ -3,8 +3,8 @@ import java.util.Random;
 public class NossoVetor{
     private int[] vetor;
     private int ocupacao;
-    private int trocas;
-    private int comparacoes;
+    private long trocas;
+    private long comparacoes;
      
     public NossoVetor (int tamanho){ 
         vetor = new int[tamanho];
@@ -129,7 +129,7 @@ public class NossoVetor{
         return -1;
     }
 
-    public int getTrocas() {
+    public long getTrocas() {
         return trocas;
     }
     
@@ -142,7 +142,7 @@ public class NossoVetor{
         comparacoes = 0;
     }
 
-    public int getComparacoes() {
+    public long getComparacoes() {
         return comparacoes;
     }
 
@@ -153,6 +153,11 @@ public class NossoVetor{
     public int getElemento(int index) {
         return vetor[index];
     }
+
+    public int[] getVetor() {
+        return vetor;
+    }
+
 
     public void preencheVetor () {
         Random random = new Random();
@@ -176,32 +181,47 @@ public class NossoVetor{
         }
     }
 
-    public void selectionsort() {
+    public void selectionSort() {
         resetTrocas();
-        for (int i = 0; i < vetor.length - 1; ++i) {
+        comparacoes = 0;
+    
+        for (int i = 0; i < ocupacao - 1; ++i) {
             int min = i;
-            for (int j = i + 1; j < vetor.length; ++j)
-                if (vetor[j] < vetor[min])
-                 min = j;
-            int x = vetor[i];
-            vetor[i] = vetor[min];
-            vetor[min] = x;
-            trocas++;
+            for (int j = i + 1; j < ocupacao; ++j) {
+                comparacoes++;
+                if (vetor[j] < vetor[min]) {
+                    min = j;
+                }
+            }
+    
+            if (min != i) {
+                int x = vetor[i];
+                vetor[i] = vetor[min];
+                vetor[min] = x;
+                trocas++;
+            }
         }
     }
-    
     
     public void insertionSort() {
-        resetTrocas();
-        for (int j = 1; j < vetor.length; ++j) {
+        comparacoes = 0;
+        trocas = 0;
+        for (int j = 1; j < ocupacao; ++j) {
             int x = vetor[j];
             int i;
-            for (i = j - 1; i >= 0 && vetor[i] > x; --i)
-                vetor[i + 1] = vetor[i];
+            for (i = j - 1; i >= 0; --i) {
+                comparacoes++;
+                if (vetor[i] > x) {
+                    vetor[i + 1] = vetor[i];
+                    trocas++;
+                } else {
+                    break;
+                }
+            }
             vetor[i + 1] = x;
-            trocas++;
         }
     }
+
     
     @Override
     public String toString() {

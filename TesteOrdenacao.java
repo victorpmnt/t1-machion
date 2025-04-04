@@ -1,71 +1,67 @@
 import java.util.Calendar;
 import java.util.Random;
 import java.util.Scanner;
+
 public class TesteOrdenacao {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        NossoVetor v;
-        int t;
         Random rand = new Random();
-        System.out.print("escolha o tamanho do vetor, 0 encerra: ");
-        t = scanner.nextInt();
-        while (t > 0) {
-            v = new NossoVetor(t);
-            v.preencheVetor();
-            int elementoBusca = v.getElemento(rand.nextInt(t));
-            // System.out.println( "vetor original:\n "+ v); vetor antes da ordenação
 
-            // busca linear
+        System.out.print("Escolha o tamanho do vetor: ");
+        int tamanhoVetor = scanner.nextInt();
+
+        System.out.print("Quantas execuções deseja realizar? ");
+        int repeticoes = scanner.nextInt();
+
+        for (int execucao = 1; execucao <= repeticoes; execucao++) {
+            System.out.println("\n--- Execução " + execucao + " ---");
+
+            // Cria um novo vetor a cada execução (para evitar ordenação prévia)
+            NossoVetor v = new NossoVetor(tamanhoVetor);
+            v.preencheVetor();
+            int elementoBusca = v.getElemento(rand.nextInt(tamanhoVetor));
+
+            // Busca linear (antes de ordenar)
             v.resetContadores();
             try {
                 v.buscaLinear(elementoBusca);
-                System.out.println("busca linear: " + v.getComparacoes() + " comparações");
+                System.out.println("Busca linear: " + v.getComparacoes() + " comparações");
             } catch (ElementoNaoEncontradoException e) {
-                System.out.println("Elemento não encontrado na busca linear");
+                System.out.println("Elemento não encontrado (busca linear)");
             }
 
+
             // bubbleSort
-            long ini = Calendar.getInstance().getTimeInMillis();
-            v.bubbleSort();
-            long fim = Calendar.getInstance().getTimeInMillis();
-            // System.out.println(ini);
-            // System.out.println(fim);
-            System.out.println("bubblesort demorou " + (fim-ini) + " milissegundos");
-            System.out.println("bubblesort realizou " + v.getTrocas() + " trocas"); // Exibe trocas
-            // System.out.println("\nvetor ordenado:\n" + v); // vetor ordenado
-            // System.out.println("\nvetor ordenado:\n" + v);
+            // long iniBubble = Calendar.getInstance().getTimeInMillis();
+            // v.bubbleSort();
+            // long fimBubble = Calendar.getInstance().getTimeInMillis();
+            // System.out.println("\nbubblesort demorou " + (fimBubble-iniBubble) + " ms | " + v.getTrocas() + " trocas");
 
-            // selectionSort
-            // v.preencheVetor();
+
+            // InsertionSort (ordenar para depois fazer busca binária)
+            // long inicioInsertion = Calendar.getInstance().getTimeInMillis();
+            // v.insertionSort();
+            // long fimInsertion = Calendar.getInstance().getTimeInMillis();
+            // System.out.println("\nInsertionSort: " + (fimInsertion - inicioInsertion) + " ms | " + v.getTrocas() + " trocas");
+
+            // // selectionSort
             // // System.out.println( "vetor original:\n "+ v);
-            // ini = Calendar.getInstance().getTimeInMillis();
-            // v.selectionsort();
-            // fim = Calendar.getInstance().getTimeInMillis();
-            // v.selectionsort();
-            // System.out.println("selectionSort demorou " + (fim-ini) + " milissegundos");
+            long iniInser = Calendar.getInstance().getTimeInMillis();
+            v.selectionSort();
+            long fimInser = Calendar.getInstance().getTimeInMillis();
+            System.out.println("\nselectionSort demorou " + (fimInser-iniInser) + " ms | " + v.getTrocas() + " trocas");
 
-            // // insertionSort
-            // v.preencheVetor();
-            // // System.out.println( "vetor original:\n "+ v);
-            // ini = Calendar.getInstance().getTimeInMillis();
-            // v.insertionsort();
-            // fim = Calendar.getInstance().getTimeInMillis();
-            // v.insertionsort();
-            // System.out.println("insertion demorou " + (fim-ini) + " milissegundos");
 
-            // Busca Binária
+            // Busca binária (após ordenação)
             v.resetContadores();
             try {
                 v.buscaBinaria(elementoBusca);
-                System.out.println("busca binaria: " + v.getComparacoes() + " comparações");
+                System.out.println("\nBusca binária: " + v.getComparacoes() + " comparações");
             } catch (ElementoNaoEncontradoException e) {
-                System.out.println("Elemento não encontrado na busca binária");
+                System.out.println("Elemento não encontrado (busca binária)");
             }
-
-
-            System.out.print("\nescolha o novo tamanho, 0 encerra: ");
-            t = scanner.nextInt();
         }
+
         scanner.close();
     }
 }
